@@ -159,10 +159,16 @@ def health():
     storage_status = 'disconnected'
     try:
         if supabase_utils.supabase:
-            # Try to list files in the bucket (much more likely to work with anon key if RLS allows)
+            # Try to list files
             res = supabase_utils.supabase.storage.from_('images').list()
-            # If we get here, the bucket is accessible
             storage_status = f'connected (found {len(res)} files)'
+            
+            # Try to generate a dummy signed upload URL (test permissions)
+            try:
+                supabase_utils.supabase.storage.from_('images').create_signed_upload_url('test_probe.txt')
+                storage_status += " | signed_url: OK"
+            except Exception as e:
+                storage_status += f" | signed_url: FAILED ({str(e)})"
     except Exception as e:
         storage_status = f'error: {str(e)}'
         

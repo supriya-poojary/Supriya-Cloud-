@@ -10,7 +10,11 @@ IMAGES_DIR = os.path.join(STORAGE_DIR, 'images')
 DB_FILE = os.path.join(STORAGE_DIR, 'metadata.json')
 
 # Ensure dirs exist
-os.makedirs(IMAGES_DIR, exist_ok=True)
+try:
+    os.makedirs(IMAGES_DIR, exist_ok=True)
+except OSError:
+    # Ignore on read-only filesystems like Vercel
+    pass
 
 def _load_db():
     if not os.path.exists(DB_FILE):

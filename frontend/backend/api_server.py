@@ -31,7 +31,7 @@ def add_cors(response):
     response.headers['Access-Control-Allow-Methods'] = 'GET,PUT,POST,DELETE,OPTIONS'
     return response
 
-@app.route('/local-store/<object_name>', methods=['PUT', 'OPTIONS'])
+@app.route('/api/local-store/<object_name>', methods=['PUT', 'OPTIONS'])
 def local_upload(object_name):
     if request.method == 'OPTIONS':
         return add_cors(make_response('', 204))
@@ -43,7 +43,7 @@ def local_upload(object_name):
     local_adapter.save_file_content(object_name, content)
     return add_cors(make_response('', 200))
 
-@app.route('/local-store/<object_name>', methods=['GET', 'OPTIONS'])
+@app.route('/api/local-store/<object_name>', methods=['GET', 'OPTIONS'])
 def local_download(object_name):
     if request.method == 'OPTIONS':
         return add_cors(make_response('', 204))
@@ -56,7 +56,7 @@ def local_download(object_name):
         return add_cors(make_response(send_file(path)))
     return add_cors(make_response('', 404))
 
-@app.route('/images/upload', methods=['POST', 'OPTIONS'])
+@app.route('/api/images/upload', methods=['POST', 'OPTIONS'])
 def upload_image():
     if request.method == 'OPTIONS':
         return '', 204
@@ -71,7 +71,7 @@ def upload_image():
     
     return jsonify(body), response.get('statusCode', 200)
 
-@app.route('/images', methods=['GET', 'OPTIONS'])
+@app.route('/api/images', methods=['GET', 'OPTIONS'])
 def list_images():
     if request.method == 'OPTIONS':
         return '', 204
@@ -87,7 +87,7 @@ def list_images():
     
     return jsonify(body), response.get('statusCode', 200)
 
-@app.route('/images/<id>/download', methods=['GET', 'OPTIONS'])
+@app.route('/api/images/<id>/download', methods=['GET', 'OPTIONS'])
 def download_image(id):
     if request.method == 'OPTIONS':
         return '', 204
@@ -103,7 +103,7 @@ def download_image(id):
     
     return jsonify(body), response.get('statusCode', 200)
 
-@app.route('/images/<id>', methods=['DELETE', 'OPTIONS'])
+@app.route('/api/images/<id>', methods=['DELETE', 'OPTIONS'])
 def delete_image(id):
     if request.method == 'OPTIONS':
         return '', 204
@@ -122,7 +122,7 @@ def delete_image(id):
     
     return jsonify(body), response.get('statusCode', 200)
 
-@app.route('/delete', methods=['DELETE', 'OPTIONS'])
+@app.route('/api/delete', methods=['DELETE', 'OPTIONS'])
 def local_delete():
     if request.method == 'OPTIONS':
         return add_cors(make_response('', 204))
@@ -133,7 +133,7 @@ def local_delete():
         body = json.loads(body)
     return add_cors(make_response(jsonify(body), response.get('statusCode', 200)))
 
-@app.route('/usage', methods=['GET', 'OPTIONS'])
+@app.route('/api/usage', methods=['GET', 'OPTIONS'])
 def local_usage():
     if request.method == 'OPTIONS':
         return add_cors(make_response('', 204))
@@ -144,7 +144,7 @@ def local_usage():
         body = json.loads(body)
     return add_cors(make_response(jsonify(body), response.get('statusCode', 200)))
 
-@app.route('/health', methods=['GET'])
+@app.route('/api/health', methods=['GET'])
 def health():
     return jsonify({'status': 'healthy'}), 200
 

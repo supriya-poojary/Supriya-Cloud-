@@ -394,5 +394,33 @@
     "s3_key": "2025-12-16T15-36-32.253160Z_ba5e5608-5646-42a4-8a2b-bbf588075392-istockphoto-1796374503-612x612.jpg",
     "upload_time": "2025-12-16T15:36:32.253160Z",
     "original_filename": "istockphoto-1796374503-612x612.jpg"
+  },
+  {
+    "user_id": "suppi1234@gmail.com",
+    "image_id": "2025-12-19T08-08-30.394960Z_da0b9358-1447-4737-b569-c6ec4d6fd647-istockphoto-1796374503-612x612.jpg",
+    "tag": "lion",
+    "tags": [
+      "lion"
+    ],
+    "description": "Batch upload on 12/19/2025",
+    "content_type": "image/jpeg",
+    "file_size": 35976,
+    "s3_key": "2025-12-19T08-08-30.394960Z_da0b9358-1447-4737-b569-c6ec4d6fd647-istockphoto-1796374503-612x612.jpg",
+    "upload_time": "2025-12-19T08:08:30.394960Z",
+    "original_filename": "istockphoto-1796374503-612x612.jpg"
+  },
+  {
+    "user_id": "supriyassspoojary26@gmail.com",
+    "image_id": "2025-12-20T05-12-02.749660Z_5ceb4b10-7e21-45fd-aa1f-085849c30458-pexels-souvenirpixels-417074 (3).jpg",
+    "tag": "uncategorized",
+    "tags": [
+      "uncategorized"
+    ],
+    "description": "Batch upload on 12/20/2025",
+    "content_type": "image/jpeg",
+    "file_size": 1275751,
+    "s3_key": "2025-12-20T05-12-02.749660Z_5ceb4b10-7e21-45fd-aa1f-085849c30458-pexels-souvenirpixels-417074 (3).jpg",
+    "upload_time": "2025-12-20T05:12:02.749660Z",
+    "original_filename": "pexels-souvenirpixels-417074 (3).jpg"
   }
 ]

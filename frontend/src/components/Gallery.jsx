@@ -5,7 +5,7 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 
 import { useAuth } from '@/context/AuthContext';
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+const API_URL = import.meta.env.VITE_API_URL || '/api';
 
 const FILTER_PRESETS = [
     { name: 'Normal', class: '', css: '' },

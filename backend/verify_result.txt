@@ -1,6 +1,0 @@
-User A Images: 5
-User A Files: ['image_A.txt', 'image_A.txt', 'image_A.txt', 'image_A.txt', 'image_A.txt']
-User B Images: 5
-User B Files: ['image_B.txt', 'image_B.txt', 'image_B.txt', 'image_B.txt', 'image_B.txt']
-Anonymous Images: 0
-RESULT: PASS

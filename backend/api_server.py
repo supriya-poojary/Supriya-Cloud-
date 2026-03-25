@@ -150,10 +150,13 @@ if __name__ == '__main__':
     port = int(os.environ.get('PORT', 8000))
     
     # In Lite Mode, ensure the local storage dir exists
-    # Check env var string 'true'
     if os.environ.get('USE_LOCAL_STORAGE') == 'true':
-        # Default path matching local_adapter's expectation or common convention
         local_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'local_storage')
         os.makedirs(local_dir, exist_ok=True)
     
     app.run(host='0.0.0.0', port=port, debug=True)
+else:
+    # When imported (like by Vercel), we still might want to ensure some setup
+    if os.environ.get('USE_LOCAL_STORAGE') == 'true':
+        local_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'local_storage')
+        os.makedirs(local_dir, exist_ok=True)

@@ -66,31 +66,31 @@ function Scene() {
             <spotLight position={[10, 10, 10]} angle={0.15} penumbra={1} intensity={1.5} castShadow />
             <pointLight position={[-10, -10, -10]} intensity={1} color="#aaa" />
 
-            <Float
-                speed={2}
-                rotationIntensity={0.5}
-                floatIntensity={0.5}
-                floatingRange={[-0.2, 0.2]}
-            >
-                <Polaroid
-                    url={IMAGES[0]}
-                    position={[-3, 0.5, 0]}
-                    rotation={[0, 0.2, -0.1]}
-                    factor={0.8}
-                />
-                <Polaroid
-                    url={IMAGES[1]}
-                    position={[0, 0, 1]}
-                    rotation={[0, 0, 0.05]}
-                    factor={1.2}
-                />
-                <Polaroid
-                    url={IMAGES[2]}
-                    position={[3, -0.5, -0.5]}
-                    rotation={[0, -0.2, 0.1]}
-                    factor={1}
-                />
-            </Float>
+        <Float
+            speed={2}
+            rotationIntensity={0.5}
+            floatIntensity={0.5}
+            floatingRange={[-0.2, 0.2]}
+        >
+            <Polaroid
+                url={IMAGES[0]}
+                position={[viewport.width < 8 ? -1.5 : -3, 0.5, 0]}
+                rotation={[0, 0.2, -0.1]}
+                factor={0.8}
+            />
+            <Polaroid
+                url={IMAGES[1]}
+                position={[0, 0, 1]}
+                rotation={[0, 0, 0.05]}
+                factor={1.2}
+            />
+            <Polaroid
+                url={IMAGES[2]}
+                position={[viewport.width < 8 ? 1.5 : 3, -0.5, -0.5]}
+                rotation={[0, -0.2, 0.1]}
+                factor={1}
+            />
+        </Float>
 
             <ContactShadows position={[0, -4, 0]} opacity={0.4} scale={20} blur={2} far={4} />
             <Environment preset="city" />
@@ -104,8 +104,8 @@ export default function Hero3D() {
             <Canvas camera={{ position: [0, 0, 8], fov: 40 }} dpr={[1, 2]}>
                 <Scene />
             </Canvas>
-            {/* Gradient Overlay for seamless blending with dark background */}
-            <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#0f172a] to-transparent pointer-events-none" />
+            {/* Gradient Overlay */}
+            <div className="absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#0f172a] via-[#0f172a]/80 to-transparent pointer-events-none" />
         </div>
     );
 }

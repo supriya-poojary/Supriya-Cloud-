@@ -1,0 +1,31 @@
+{
+  "version": 2,
+  "builds": [
+    {
+      "src": "frontend/package.json",
+      "use": "@vercel/static-build",
+      "config": { "distDir": "dist" }
+    },
+    {
+      "src": "api/index.py",
+      "use": "@vercel/python"
+    }
+  ],
+  "rewrites": [
+    {
+      "source": "/api/(.*)",
+      "destination": "api/index.py"
+    },
+    {
+      "source": "/local-store/(.*)",
+      "destination": "api/index.py"
+    },
+    {
+      "source": "/((?!api/|local-store/|assets/|favicon.ico).*)$",
+      "destination": "frontend/index.html"
+    }
+  ],
+  "env": {
+    "USE_LOCAL_STORAGE": "false"
+  }
+}

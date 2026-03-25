@@ -106,12 +106,68 @@ export default function Auth() {
         .auth-container {
             position: relative;
             width: 850px;
+            max-width: 95vw;
             height: 550px;
             background: #111827;
             border-radius: 30px;
             box-shadow: 0 0 30px rgba(0,0,0,0.5);
             overflow: hidden;
             border: 2px solid rgba(255, 122, 87, 0.3);
+            transition: all 0.3s ease;
+        }
+
+        @media (max-width: 768px) {
+            .auth-container {
+                width: 400px;
+                height: 650px;
+            }
+            .form-box {
+                width: 100% !important;
+                height: 80% !important;
+                top: 0;
+            }
+            .form-box.Register {
+                transform: translateY(100%);
+            }
+            .auth-container.active .form-box.Register {
+                transform: translateY(0);
+            }
+            .auth-container.active .form-box.Login {
+                transform: translateY(-100%);
+                opacity: 0;
+            }
+            .toggle-box {
+                width: 100% !important;
+                height: 20% !important;
+                top: 80% !important;
+                left: 0 !important;
+                border-radius: 30px 30px 0 0 !important;
+            }
+            .auth-container.active .toggle-box {
+                top: 80% !important;
+                left: 0 !important;
+            }
+            .toggle-panel {
+                height: 100% !important;
+            }
+            .toggle-panel h1 {
+                font-size: 1.5rem !important;
+                margin-bottom: 0.5rem !important;
+            }
+            .toggle-panel p {
+                display: none;
+            }
+            .form-box h2 {
+                font-size: 2rem !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .auth-container {
+                width: 100%;
+                height: 600px;
+                border-radius: 20px;
+            }
         }
 
         .form-box {

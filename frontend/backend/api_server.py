@@ -146,7 +146,21 @@ def local_usage():
 
 @app.route('/api/health', methods=['GET'])
 def health():
-    return jsonify({'status': 'healthy'}), 200
+    from src.utils import supabase_utils
+    db_status = 'disconnected'
+    try:
+        if supabase_utils.supabase:
+            # Try a simple select to test connection
+            supabase_utils.supabase.table('ImageMetadata').select('count', count='exact').limit(1).execute()
+            db_status = 'connected'
+    except Exception as e:
+        db_status = f'error: {str(e)}'
+        
+    return jsonify({
+        'status': 'healthy',
+        'database': db_status,
+        'vercel': os.environ.get('VERCEL') == '1'
+    }), 200
 
 if __name__ == '__main__':
     port = int(os.environ.get('PORT', 8000))

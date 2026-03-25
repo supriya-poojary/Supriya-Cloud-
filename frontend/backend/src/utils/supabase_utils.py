@@ -30,7 +30,9 @@ def generate_presigned_upload_url(object_name, expiration=3600):
         # The key in v2.3.x is usually 'signedUrl'
         return res.get('signedURL', res.get('signedUrl'))
     except Exception as e:
-        logger.error(f"Generate upload URL failed: {e}")
+        logger.error(f"Generate upload URL failed: {str(e)}")
+        # For debugging purposes in serverless logs
+        print(f"DEBUG: Supabase Storage Error: {str(e)}")
         return None
 
 def generate_presigned_download_url(object_name, expiration=3600):

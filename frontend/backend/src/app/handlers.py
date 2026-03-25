@@ -107,7 +107,7 @@ def save_metadata_handler(event, context):
         }
         # item.update(body) # Explicit fields preferred for strict compliance
 
-        if dynamo_utils.save_metadata(TABLE_NAME, item):
+        if supabase_utils.save_metadata(item):
             return common.create_response(201, {"status": "success", "data": item})
         else:
             return common.create_error_response(500, "Failed to save metadata")
@@ -207,7 +207,7 @@ def get_storage_usage_handler(event, context):
         # Note: In a production system with millions of images, this aggregation should be 
         # maintained in a separate 'UserStats' table and updated via DynamoDB Streams.
         # For this scale, a query is acceptable.
-        items = dynamo_utils.query_images(TABLE_NAME, user_id)
+        items = supabase_utils.query_images(user_id=user_id)
         
         total_bytes = 0
         file_count = 0

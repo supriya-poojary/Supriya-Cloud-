@@ -88,13 +88,23 @@ export default function Auth() {
 
     const handleResetPassword = (e) => {
         e.preventDefault();
-        if (!resetForm.newPassword) return;
+        if (!resetForm.username || !resetForm.newPassword) {
+            toast.error("Please fill in both fields");
+            return;
+        }
 
-        localStorage.setItem('demo_password', resetForm.newPassword);
+        const storedUsers = JSON.parse(localStorage.getItem('cloudbox_users') || '{}');
+        if (!storedUsers[resetForm.username]) {
+            toast.error("User not found.");
+            return;
+        }
+
+        storedUsers[resetForm.username] = resetForm.newPassword;
+        localStorage.setItem('cloudbox_users', JSON.stringify(storedUsers));
 
         setIsForgotPassword(false);
-        setForm(prev => ({ ...prev, password: '' })); // Clear login password
-        alert("Password reset successfully! You can now login with your new password.");
+        setForm(prev => ({ ...prev, password: '' })); 
+        toast.success("Password reset successfully! You can now login.");
     };
 
 
@@ -341,8 +351,13 @@ export default function Auth() {
                                         type="text"
                                         required
                                         aria-label="Username"
+                                        value={form.username}
+                                        onChange={(e) => {
+                                            setForm({ ...form, username: e.target.value.toLowerCase() });
+                                            if (error) setError('');
+                                        }}
                                         className="w-full bg-[#0f172a] border border-white/10 rounded-xl py-3 pl-10 pr-4 focus:ring-2 focus:ring-[#ff7a57] focus:border-transparent outline-none transition-all"
-                                        placeholder="Username"
+                                        placeholder="Username (Email)"
                                     />
                                 </div>
 
@@ -454,7 +469,7 @@ export default function Auth() {
                                 required
                                 aria-label="Username"
                                 value={form.username}
-                                onChange={(e) => setForm({ ...form, username: e.target.value })}
+                                onChange={(e) => setForm({ ...form, username: e.target.value.toLowerCase() })}
                                 className="w-full bg-[#0f172a] border border-white/10 rounded-xl py-3 pl-10 pr-4 focus:ring-2 focus:ring-[#ff7a57] focus:border-transparent outline-none transition-all"
                                 placeholder="Enter New Email"
                             />

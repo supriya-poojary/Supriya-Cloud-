@@ -8,8 +8,8 @@ from flask_cors import CORS
 import os
 import sys
 
-# Add src to path
-sys.path.insert(0, '/app')
+# Add current directory to path so it can find 'src'
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 
 from src.app import handlers
 from src.utils import local_adapter

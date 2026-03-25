@@ -1,8 +1,8 @@
 import sys
 import os
 
-# Add the root and backend directory to path so it can find 'backend' and 'src'
-root_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+# Add the frontend and backend directory to path so it can find 'backend' and 'src'
+root_path = os.path.dirname(os.path.dirname(os.path.abspath(__file__))) # frontend folder
 sys.path.append(root_path)
 sys.path.append(os.path.join(root_path, 'backend'))
 

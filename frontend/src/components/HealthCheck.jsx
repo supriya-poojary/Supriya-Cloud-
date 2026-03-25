@@ -10,9 +10,12 @@ export default function HealthCheck() {
     useEffect(() => {
         const checkHealth = async () => {
             try {
-                await axios.get(`${API_URL}/health`, { timeout: 2000 });
+                console.log(`Checking health at: ${API_URL}/health`);
+                const response = await axios.get(`${API_URL}/health`, { timeout: 5000 });
+                console.log('Health check successful:', response.data);
                 setStatus('online');
             } catch (error) {
+                console.error('Health check failed:', error.message);
                 setStatus('offline');
             }
         };

@@ -21,7 +21,9 @@ CORS(app)  # Enable CORS for frontend
 os.environ.setdefault('BUCKET_NAME', 'image-uploads')
 os.environ.setdefault('TABLE_NAME', 'ImageMetadata')
 os.environ.setdefault('AWS_ENDPOINT_URL', 'http://localstack:4566')
-os.environ.setdefault('USE_LOCAL_STORAGE', 'true') # Default to local storage for easier setup
+# Default to false if Vercel is detected, else default to true
+is_vercel = os.environ.get('VERCEL') == '1'
+os.environ.setdefault('USE_LOCAL_STORAGE', 'false' if is_vercel else 'true')
 
 def add_cors(response):
     response.headers['Access-Control-Allow-Origin'] = '*'
@@ -157,6 +159,10 @@ if __name__ == '__main__':
     app.run(host='0.0.0.0', port=port, debug=True)
 else:
     # When imported (like by Vercel), we still might want to ensure some setup
-    if os.environ.get('USE_LOCAL_STORAGE') == 'true':
+    # But ONLY if not on Vercel or if local storage is explicitly requested and possible
+    if os.environ.get('USE_LOCAL_STORAGE') == 'true' and os.environ.get('VERCEL') != '1':
         local_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'local_storage')
-        os.makedirs(local_dir, exist_ok=True)
+        try:
+            os.makedirs(local_dir, exist_ok=True)
+        except OSError:
+            pass

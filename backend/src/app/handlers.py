@@ -3,7 +3,7 @@ import logging
 import os
 import uuid
 import datetime
-from src.utils import s3_utils, dynamo_utils, common
+from src.utils import supabase_utils, common
 
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
@@ -30,8 +30,8 @@ def generate_upload_url_handler(event, context):
         safe_timestamp = iso_timestamp.replace(':', '-')
         object_name = f"{safe_timestamp}_{uuid.uuid4()}-{filename}"
         
-        # S3 Presigned URL
-        presigned_url = s3_utils.generate_presigned_upload_url(BUCKET_NAME, object_name)
+        # Supabase Presigned URL
+        presigned_url = supabase_utils.generate_presigned_upload_url(object_name)
         if not presigned_url:
              return common.create_error_response(500, "Failed to generate upload URL")
 
@@ -42,23 +42,22 @@ def generate_upload_url_handler(event, context):
             if tag and tag not in tags:
                 tags.append(tag)
             
-            # Ensure at least one tag is present for the primary GSI if legacy code relies on it
             primary_tag = tags[0] if tags else (tag or 'uncategorized')
 
             item = {
+                'id': str(uuid.uuid4()),  # Supabase usually uses 'id' as primary key
                 'user_id': user_id,
                 'image_id': object_name,
                 'tag': primary_tag,
-                'tags': tags,
+                'tags': json.dumps(tags), # Supabase text/JSON
                 'description': body.get('description', ''),
                 'content_type': body.get('content_type', 'application/octet-stream'),
                 'file_size': body.get('file_size', 0),
-                's3_key': object_name,
                 'upload_time': iso_timestamp,
                 'original_filename': filename
             }
             
-            if not dynamo_utils.save_metadata(TABLE_NAME, item):
+            if not supabase_utils.save_metadata(item):
                 logger.error(f"Failed to save metadata for {object_name}")
                 # We could return 500, but the URL was generated. 
                 # Ideally, we save metadata first? No, doesn't matter much for presigned.
@@ -128,7 +127,7 @@ def list_images_handler(event, context):
         start_date = query_params.get('start_date')
         end_date = query_params.get('end_date')
 
-        items = dynamo_utils.query_images(TABLE_NAME, user_id, tag, start_date, end_date)
+        items = supabase_utils.query_images(user_id, tag, start_date, end_date)
         
         return common.create_response(200, {"images": items})
 
@@ -147,7 +146,7 @@ def generate_download_url_handler(event, context):
         if not object_name:
             return common.create_error_response(400, "Missing image id")
 
-        url = s3_utils.generate_presigned_download_url(BUCKET_NAME, object_name)
+        url = supabase_utils.generate_presigned_download_url(object_name)
         
         if url:
              return common.create_response(200, {"download_url": url})
@@ -165,23 +164,23 @@ def delete_image_handler(event, context):
     try:
         query_params = event.get('queryStringParameters', {}) or {}
         image_id = query_params.get('id') # object_name
-        user_id = query_params.get('user_id') # needed for DynamoDB PK
+        user_id = query_params.get('user_id') 
         
         if not image_id or not user_id:
              return common.create_error_response(400, "Missing id or user_id")
 
-        # 1. Delete from S3
-        s3_deleted = s3_utils.delete_s3_object(BUCKET_NAME, image_id)
+        # 1. Delete from Supabase Storage
+        storage_deleted = supabase_utils.delete_object(image_id)
         
-        # 2. Delete from DynamoDB
-        dynamo_deleted = dynamo_utils.delete_metadata_item(TABLE_NAME, user_id, image_id)
+        # 2. Delete from Supabase Database
+        db_deleted = supabase_utils.delete_metadata_item(user_id, image_id)
         
-        if s3_deleted and dynamo_deleted:
+        if storage_deleted and db_deleted:
             return common.create_response(200, {"status": "deleted", "id": image_id})
         else:
             errors = []
-            if not s3_deleted: errors.append("S3 delete failed")
-            if not dynamo_deleted: errors.append("DynamoDB delete failed")
+            if not storage_deleted: errors.append("Storage delete failed")
+            if not db_deleted: errors.append("Database delete failed")
             return common.create_response(207, {
                 "status": "partial_success", 
                 "errors": errors,

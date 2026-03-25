@@ -116,63 +116,9 @@ export default function Auth() {
             transition: all 0.3s ease;
         }
 
-        @media (max-width: 768px) {
-            .auth-container {
-                width: 400px;
-                height: 650px;
-            }
-            .form-box {
-                width: 100% !important;
-                height: 80% !important;
-                top: 0;
-            }
-            .form-box.Register {
-                transform: translateY(100%);
-            }
-            .auth-container.active .form-box.Register {
-                transform: translateY(0);
-            }
-            .auth-container.active .form-box.Login {
-                transform: translateY(-100%);
-                opacity: 0;
-            }
-            .toggle-box {
-                width: 100% !important;
-                height: 20% !important;
-                top: 80% !important;
-                left: 0 !important;
-                border-radius: 30px 30px 0 0 !important;
-            }
-            .auth-container.active .toggle-box {
-                top: 80% !important;
-                left: 0 !important;
-            }
-            .toggle-panel {
-                height: 100% !important;
-            }
-            .toggle-panel h1 {
-                font-size: 1.5rem !important;
-                margin-bottom: 0.5rem !important;
-            }
-            .toggle-panel p {
-                display: none;
-            }
-            .form-box h2 {
-                font-size: 2rem !important;
-            }
-        }
-
-        @media (max-width: 480px) {
-            .auth-container {
-                width: 100%;
-                height: 600px;
-                border-radius: 20px;
-            }
-        }
-
         .form-box {
             position: absolute;
-            left: 0; /* Form on Left */
+            left: 0;
             width: 50%;
             height: 100%;
             display: flex;
@@ -202,8 +148,7 @@ export default function Auth() {
         }
 
         .auth-container.active .form-box.Login {
-            transform: translateX(100%); /* Move to Right (hidden behind overlay?) No, overlay moves Left. */
-            /* Actually, if overlay moves left, Login (Left) should disappear or move. */
+            transform: translateX(100%);
             opacity: 0;
             pointer-events: none;
         }
@@ -234,7 +179,7 @@ export default function Auth() {
         .toggle-box {
             position: absolute;
             top: 0;
-            left: 50%; /* Overlay starts on Right */
+            left: 50%;
             width: 50%;
             height: 100%;
             overflow: hidden;
@@ -244,7 +189,7 @@ export default function Auth() {
         }
 
         .auth-container.active .toggle-box {
-            left: 0; /* Overlay moves to Left */
+            left: 0;
             border-radius: 0 150px 100px 0;
         }
 
@@ -255,7 +200,7 @@ export default function Auth() {
             width: 200%;
             background: linear-gradient(135deg, #ff7a57, #d8482d, #0f172a);
             top: 0;
-            left: -100%; /* Gradient alignment */
+            left: -100%;
             transition: all 0.6s ease-in-out;
         }
 
@@ -265,7 +210,7 @@ export default function Auth() {
 
         .toggle-panel {
             position: absolute;
-            width: 50%;
+            width: 100%;
             height: 100%;
             display: flex;
             flex-direction: column;
@@ -278,38 +223,105 @@ export default function Auth() {
             transform: translateX(0);
         }
 
-        /* Right Panel (Welcome) - Visible initially inside Right Overlay */
         .toggle-panel.toggle-right {
             right: 0;
             transform: translateX(0);
         }
 
-        /* Left Panel (Hello Again) - Hidden initially? */
-        /* Since Toggle Box is half-width, we need to position panels inside IT. */
-        /* The Toggle Box translates, wrapping the panels. */
-        /* Actually, simpler approach: Toggle Box is the container. */
-        /* Inside Toggle Box (50% wide): */
-        /*   If at Right: we show Toggle Right. */
-        /*   If at Left: we show Toggle Left. */
-        
-        /* Let's double the width of content inside? */
-        /* Standard trick: Toggle Panel Left is at Left: 0 (of 200% width container?) */
-        /* Let's stick to the simplest visual: absolute panels relative to toggle-box. */
-        
         .toggle-panel.toggle-left {
-            transform: translateX(-200%); /* Hidden to left */
+            transform: translateX(-200%);
         }
         
         .auth-container.active .toggle-panel.toggle-left {
-            transform: translateX(0); /* Visible when overlay is on left */
-             /* Since overlay is on Left, Left panel is inside it. */
-             /* Wait, toggle-box width is 50%. Panel width is 50%? No 100% of box. */
+            transform: translateX(0);
         }
-        
-        .toggle-panel { width: 100% !important; }
 
         .auth-container.active .toggle-panel.toggle-right {
-            transform: translateX(200%); /* Move out to right */
+            transform: translateX(200%);
+        }
+
+        /* Responsive Fixes - MUST be at bottom to override */
+        @media (max-width: 768px) {
+            .auth-container {
+                width: 400px;
+                height: 650px;
+                margin: 20px auto;
+            }
+            .form-box {
+                width: 100% !important;
+                height: 80% !important;
+                top: 0 !important;
+                left: 0 !important;
+                transform: none !important;
+            }
+            .form-box.Register {
+                transform: translateY(100%) !important;
+                opacity: 0 !important;
+            }
+            .auth-container.active .form-box.Register {
+                transform: translateY(0%) !important;
+                opacity: 1 !important;
+            }
+            .form-box.Login {
+                transform: translateY(0%) !important;
+                opacity: 1 !important;
+            }
+            .auth-container.active .form-box.Login {
+                transform: translateY(-100%) !important;
+                opacity: 0 !important;
+            }
+            
+            .toggle-box {
+                width: 100% !important;
+                height: 20% !important;
+                top: 80% !important;
+                left: 0 !important;
+                border-radius: 30px 30px 0 0 !important;
+                transform: none !important;
+            }
+            .auth-container.active .toggle-box {
+                left: 0 !important;
+                top: 80% !important;
+            }
+            .toggle-box::before {
+                width: 100%;
+                left: 0 !important;
+            }
+
+            .toggle-panel {
+                height: 100% !important;
+            }
+            .toggle-panel h1 {
+                font-size: 1.5rem !important;
+                margin-bottom: 0.5rem !important;
+            }
+            .toggle-panel p {
+                display: none !important;
+            }
+            .form-box h2 {
+                font-size: 2rem !important;
+            }
+            
+            .toggle-panel.toggle-left {
+                transform: translateY(-200%) !important;
+            }
+            .auth-container.active .toggle-panel.toggle-left {
+                transform: translateY(0) !important;
+            }
+            .toggle-panel.toggle-right {
+                transform: translateY(0) !important;
+            }
+            .auth-container.active .toggle-panel.toggle-right {
+                transform: translateY(200%) !important;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .auth-container {
+                width: 100%;
+                height: 600px;
+                border-radius: 20px;
+            }
         }
 
       `}</style>

@@ -156,9 +156,23 @@ def health():
     except Exception as e:
         db_status = f'error: {str(e)}'
         
+    storage_status = 'disconnected'
+    try:
+        if supabase_utils.supabase:
+            # Check if bucket exists/accessible
+            buckets = supabase_utils.supabase.storage.list_buckets()
+            bucket_names = [b.name for b in buckets]
+            if 'images' in bucket_names:
+                storage_status = 'connected'
+            else:
+                storage_status = f'error: bucket "images" not found. Found: {bucket_names}'
+    except Exception as e:
+        storage_status = f'error: {str(e)}'
+        
     return jsonify({
         'status': 'healthy',
         'database': db_status,
+        'storage': storage_status,
         'vercel': os.environ.get('VERCEL') == '1'
     }), 200
 

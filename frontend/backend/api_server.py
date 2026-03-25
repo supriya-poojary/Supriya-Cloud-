@@ -159,13 +159,10 @@ def health():
     storage_status = 'disconnected'
     try:
         if supabase_utils.supabase:
-            # Check if bucket exists/accessible
-            buckets = supabase_utils.supabase.storage.list_buckets()
-            bucket_names = [b.name for b in buckets]
-            if 'images' in bucket_names:
-                storage_status = 'connected'
-            else:
-                storage_status = f'error: bucket "images" not found. Found: {bucket_names}'
+            # Try to list files in the bucket (much more likely to work with anon key if RLS allows)
+            res = supabase_utils.supabase.storage.from_('images').list()
+            # If we get here, the bucket is accessible
+            storage_status = f'connected (found {len(res)} files)'
     except Exception as e:
         storage_status = f'error: {str(e)}'
         
